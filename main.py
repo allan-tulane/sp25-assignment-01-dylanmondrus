@@ -5,11 +5,25 @@ See assignment-01.pdf for details.
 # no imports needed.
 
 def foo(x):
-    ### TODO
+    if x<= 1:
+        return x
+    else:
+        ra = foo(x-1)
+        rb = foo(x-2)
+        return ra + rb
     pass
 
 def longest_run(mylist, key):
-    ### TODO
+    longest = 0
+    current = 0
+
+    for i in mylist:
+        if i == key:
+            current += 1
+            longest = max(longest, current)
+        else:
+            current = 0
+    return longest
     pass
 
 
@@ -37,7 +51,37 @@ def to_value(v):
         return int(v)
         
 def longest_run_recursive(mylist, key):
-    ### TODO
+    if not mylist:
+        return Result(0, 0, 0, False)
+
+    if len(mylist) == 1:
+        if mylist[0] == key:
+            return Result(1, 1, 1, True)
+        else:
+            return Result(0,0,0, False)
+
+    mid = len(mylist) // 2
+    left_result = longest_run_recursive(mylist[:mid], key)
+    right_result = longest_run_recursive(mylist[mid:], key)
+
+    cross_run = 0
+    if mylist[mid - 1] == key and mylist[mid] == key:
+        cross_run = left_result.right_size + right_result.left_size
+
+    longest_size = max(left_result.longest_size, right_result.longest_size, cross_run)
+
+    left_size = left_result.left_size
+    if left_result.is_entire_range and mylist[mid] == key:
+        left_size = left_result.left_size + right_result.left_size
+
+    right_size = right_result.right_size
+    if right_result.is_entire_range and mylist[mid - 1] == key:
+        right_size = right_result.right_ize + left_result.right_size
+
+    is_entire_range = left_result.is_entire_range and right_result.is_entire_range and all(x == key for x in mylist)
+
+    return Result(left_size, right_size, longest_size, is_entire_range)
+
     pass
 
 
